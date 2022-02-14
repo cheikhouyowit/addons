@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2015 DevIntelle Consulting Service Pvt.Ltd (<http://www.devintellecs.com>).
+
+For Module Support : devintelle@gmail.com  or Skype : devintelle
+ -->
+<odoo>
+	<!-- MAIN TEMPLATE-->
+	<template id="sale_invoice_summary_main">
+		<t t-call="web.external_layout">
+			<t t-foreach="docs" t-as="o">
+				<div class="page" style="font-size:15px;">
+					<br/><br/>
+					<center><strong><span style="font-size:24px;">Sale/Invoice Summary</span></strong></center><br/>
+					<div class="row">
+					    <div class="col-6">
+					     <table  style="border 2px solid black;">
+		                        <tr height="20px;">
+		                                <td >
+                                                    <b>Customer :</b><br/>
+		                                </td>
+		                                <td> 
+		                                     <span t-field="o.partner_id.name"/>
+                        
+		                                </td>
+		                        </tr> 
+		                         <tr height="20px;">
+		                                <td >
+                                                    <b>Invoice Status :</b>
+		                                </td>
+		                                <td> 
+		                                     <span t-if="o.status == 'posted'" >Posted</span>
+                                             <span t-if="o.status != 'posted'">Paid</span> 
+		                                </td>
+		                        </tr> 
+	                        </table>   
+					        
+                        
+					    </div>
+					
+					    <div class="col-6 pull-right" >
+					
+					         <table   style="border 2px solid black;">
+		                        <tr >
+		                                <td >
+                                                    <b>From Date :</b>
+		                                </td>
+		                                <td> 
+		                                     <span t-field="o.from_date" t-options ='{"format": "dd/MM/yyyy"}'/>
+                            
+		                                </td>
+		                        </tr> 
+		                         <tr >
+		                                <td >
+                                                    <b>To Date :</b>
+		                                </td>
+		                                <td> 
+		                                     <span t-field="o.to_date" t-options ='{"format": "dd/MM/yyyy"}'/>
+                            
+		                                </td>
+		                        </tr> 
+	                        </table>   
+                        </div>
+                    </div>
+					</div>
+                    <br/>
+                    <table class="table table-condensed">
+                    <span t-if="get_sale_invoice_data(o)[0]">
+                        <thead>
+                            <tr>
+                                <th>Invoice Number</th>
+                                <th>Sale Order Number</th>
+                                <th>Invoice Date</th>
+                                <th>Sale Order Date</th>
+                                <th class="text-right">Invoice Total</th>
+                            </tr>
+                        </thead>
+                            <tbody>
+                                <tr t-foreach="get_sale_invoice_data(o)[0]" t-as="rec">
+                                    <td><span t-esc="rec['inv_number']"/></td>
+                                    <td><span t-esc="rec['so_number']"/></td>
+                                    <td><span t-esc="rec['inv_date']"/></td>
+                                    <td><span t-esc="rec['so_date']"/></td>
+                                    <td class='text-right'><span t-esc="formatted_amount(o, rec['inv_total'])"/></td>
+                                </tr>
+                                <tr>
+                                    <td></td><td></td><td></td>
+                                    <th>Grand Total</th>
+                                    <span t-set="grand_total" t-value="get_sale_invoice_data(o)[1]"/>
+                                    <th class='text-right'><span t-esc="formatted_amount(o, grand_total)"/></th>
+                                </tr>
+                            </tbody>
+                        </span>
+                    </table>
+				</t>
+			</t>
+	</template>
+
+    <template id="sale_invoice_summary_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="dev_sale_invoice_summary.sale_invoice_summary_main"/>
+            </t>
+        </t>
+    </template>
+</odoo>
